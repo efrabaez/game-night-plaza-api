@@ -1,4 +1,4 @@
-import { bcryptAdapter } from "../../config";
+import { bcryptAdapter, JwtAdapter } from "../../config";
 import { UserModel } from "../../data";
 import { CustomError, RegisterUserDto, LoginUserDto, UserEntity } from "../../domain";
 
@@ -49,9 +49,12 @@ export class AuthService {
 
         const { password, ...rest } = UserEntity.fromObject(user);
 
+        const token = await JwtAdapter.generateToken({id: user.id, email: user.email});
+        if (!token) throw CustomError.internalServer('Can not create JWT');
+
         response = {
             data: rest,
-            token: 'ABC',
+            token: token,
             mesage: 'Success',
         }
 
