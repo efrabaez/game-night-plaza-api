@@ -14,6 +14,10 @@ const gameSchema = new moongose.Schema({
         type: String,
         require: true,
     },
+    duration: {
+        type: Number,
+        require: false,
+    },
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
