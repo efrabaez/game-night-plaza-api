@@ -11,7 +11,7 @@ const gameSchema = new moongose.Schema({
         required: true,
     },
     players: {
-        type: Number,
+        type: String,
         require: true,
     },
     user: {
