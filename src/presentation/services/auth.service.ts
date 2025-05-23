@@ -29,7 +29,7 @@ export class AuthService {
             const { password, ...rest } = UserEntity.fromObject(user);
             
             response = {
-                data: rest,
+                data: [rest],
                 mesage: 'Success',
             }
         } catch (error) {
@@ -57,7 +57,7 @@ export class AuthService {
         if (!token) throw CustomError.internalServer('Can not create JWT');
 
         response = {
-            data: rest,
+            data: [rest],
             token: token,
             mesage: 'Success',
         }

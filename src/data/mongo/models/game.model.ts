@@ -5,6 +5,7 @@ const gameSchema = new moongose.Schema({
     name: {
         type: String,
         required: [true, 'Game name is required'],
+        unique: true,
     },
     category: {
         type: String,

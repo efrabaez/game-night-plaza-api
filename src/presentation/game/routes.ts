@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { GameController } from './controller';
+import { AuthMiddleware } from '../middlewares/auth.middleware';
+import { GameService } from '../services/game.service';
 
 export class GameRoutes {
 
@@ -7,11 +9,13 @@ export class GameRoutes {
   static get routes(): Router {
 
     const router = Router();
-    const controller = new GameController();
+    const gameService = new GameService();
+    const controller = new GameController(gameService);
     
     // Define routes
-    router.get('/', controller.getGames);
-    router.post('/', controller.createGame);
+    //router.get('/', controller.getGames);
+    //router.post('/', controller.createGame);
+    router.post('/', [ AuthMiddleware.validateJWT ], controller.createGame);
 
 
 

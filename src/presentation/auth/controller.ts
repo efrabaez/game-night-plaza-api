@@ -11,14 +11,14 @@ export class AuthController {
 
     private handleError = ( error: unknown, res: Response ) => {
         if ( error instanceof CustomError ){
-            return res.status(error.statusCode).json({
+            return void res.status(error.statusCode).json({
                 data: [],
                 message: `${error}`,
             });
         }
 
         console.log(`${error}`);
-        return res.status(500).json({
+        return void res.status(500).json({
             data: [],
             message: `Internal server error`,
         });
@@ -36,7 +36,7 @@ export class AuthController {
         }
 
         this.authService.registerUser(registerDto!)
-            .then( (user) => res.json(user))
+            .then( (user) => void res.json(user))
             .catch( error => this.handleError(error, res));
     }
 
@@ -51,14 +51,14 @@ export class AuthController {
         }
 
         this.authService.loginUser(loginUserDto!)
-            .then( (user) => res.json(user))
+            .then( (user) => void res.json(user))
             .catch( error => this.handleError(error, res));
     }
 
     validateEmail = (req: Request, res: Response) => {
         const { token } = req.params;
         this.authService.validateEmail(token)
-            .then ( (validateMessage) => res.json(validateMessage))
+            .then ( (validateMessage) => void res.json(validateMessage))
             .catch( error => this.handleError(error, res));
     }
 }
