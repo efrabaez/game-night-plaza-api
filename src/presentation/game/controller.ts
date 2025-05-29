@@ -1,5 +1,5 @@
 import e, { Request, Response } from "express";
-import { CreateGameDto, CustomError } from "../../domain";
+import { CreateGameDto, CustomError, PaginationDto } from "../../domain";
 import { GameService } from "../services/game.service";
 
 export class GameController {
@@ -33,7 +33,18 @@ export class GameController {
         }
 
         this.gameService.createGame(createGameDto!, req.body.user)
-            .then( (game) => void res.json(game))
+            .then( (game) => void res.status(201).json(game))
+            .catch( error => this.handleError(error, res));
+    }
+
+    getGames = (req: Request, res: Response) => {
+        const { page = 1, limit = 10 } = req.query;
+        const [error, paginationDto] = PaginationDto.create (+page, +limit);
+
+        if (error) return void res.status(400).json({data: [], message: error});
+
+        this.gameService.getGames(paginationDto!)
+            .then( (games) => void res.json(games))
             .catch( error => this.handleError(error, res));
     }
 }

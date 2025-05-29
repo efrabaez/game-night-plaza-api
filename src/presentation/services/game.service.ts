@@ -1,5 +1,6 @@
 import { GameModel } from "../../data";
-import { CreateGameDto, CustomError, UserEntity } from "../../domain";
+import { CreateGameDto, CustomError, PaginationDto, UserEntity } from "../../domain";
+import { GameEntity } from "../../domain/entities/game.entity";
 
 //Route calls controller, then controller calls service
 export class GameService {
@@ -21,15 +22,9 @@ export class GameService {
                 user: user.id,
             });
             await game.save();
+            const {category, ...rest} = GameEntity.fromObject(game);
             response = {
-                data: [
-                    {
-                    id: game.id,
-                    name: game.name,
-                    players: game.players,
-                    duration: game.duration,
-                    },
-                ],
+                data: [rest],
                 mesage: 'Success',
             }
         } catch (error) {
@@ -39,4 +34,35 @@ export class GameService {
         return response;
     }   
 
+    public async getGames(paginationDto: PaginationDto) {
+        //const total = await GameModel.countDocuments();
+        const {page, limit} = paginationDto;
+
+        try {
+            /*const games = await GameModel.find()
+                .skip((page - 1 ) * limit) // Page 2
+                .limit(limit);*/
+            const [total, games] = await Promise.all([
+                GameModel.countDocuments(),
+                GameModel.find().skip((page - 1 ) * limit).limit(limit),
+            ]);
+            return {
+                data: games.map( (game) => ({
+                    id: game.id,
+                    game: game.name,
+                    category: game.category,
+                    players: game.players,
+                    duration: game.duration,
+                })),
+                page: page,
+                limit: limit,
+                total: total,
+                next: `/api/games/?page=${page+1}&limit=${limit}`,
+                prev: (page -1 > 0)? `/api/games/?page=${page-1}&limit=${limit}` : null,
+                mesage: 'Success',
+            }
+        } catch (error) {
+            throw CustomError.internalServer('Internal Server Eror');
+        }
+    }
 }

@@ -13,8 +13,7 @@ export class GameRoutes {
     const controller = new GameController(gameService);
     
     // Define routes
-    //router.get('/', controller.getGames);
-    //router.post('/', controller.createGame);
+    router.get('/', controller.getGames);
     router.post('/', [ AuthMiddleware.validateJWT ], controller.createGame);
 
 
