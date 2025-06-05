@@ -21,7 +21,8 @@ export class GameService {
                 ...createGameDto,
                 user: user.id,
             });
-            await game.save();
+            console.log(createGameDto)
+            //await game.save();
             const {category, ...rest} = GameEntity.fromObject(game);
             response = {
                 data: [rest],

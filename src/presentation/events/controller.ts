@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-import { CreateGameDto, CustomError, PaginationDto } from "../../domain";
+import {CreateEventDto, CustomError, PaginationDto } from "../../domain";
+import { EventService } from "../services";
 
 export class EventController {
     constructor(
-        //tooo private readonly eventService: EventService,
+        private readonly eventService: EventService,
     ){}
 
     private handleError = ( error: unknown, res: Response ) => {
@@ -23,7 +24,10 @@ export class EventController {
     }
 
     createEvent = (req: Request, res: Response) => {
-        /*const [error, createGameDto] = CreateGameDto.create( req.body);
+        const [error, createEventDto] = CreateEventDto.create({
+            ...req.body,
+            user: req.body.user.id,
+        });
         if (error) {
             return void res.status(400).json({
                 data: [],
@@ -31,10 +35,9 @@ export class EventController {
             });
         }
 
-        this.gameService.createGame(createGameDto!, req.body.user)
-            .then( (game) => void res.status(201).json(game))
-            .catch( error => this.handleError(error, res));*/
-        return void res.json('Create Event');
+        this.eventService.createEvent(createEventDto!)
+            .then( (event) => void res.status(201).json(event))
+            .catch( error => this.handleError(error, res));
     }
 
     getEvents = (req: Request, res: Response) => {
@@ -43,10 +46,8 @@ export class EventController {
 
         if (error) return void res.status(400).json({data: [], message: error});
 
-        /*this.gameService.getGames(paginationDto!)
-            .then( (games) => void res.json(games))
-            .catch( error => this.handleError(error, res));*/
-
-        return void res.json('Get Event');
+        this.eventService.getEvents(paginationDto!)
+            .then( (events) => void res.json(events))
+            .catch( error => this.handleError(error, res));
     }
 }

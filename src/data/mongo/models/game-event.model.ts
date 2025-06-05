@@ -18,13 +18,11 @@ const eventSchema = new moongose.Schema({
         type: Date,
         require: [true, 'Date is required']
     },
-    games: [
-        {
+    games: [{
             type: Schema.Types.ObjectId, 
             ref: 'Game',
             require: [true, 'game list is required']
-        }
-    ],
+    }],
     guests: {
         type: Number,
         require: [true, 'guests number is required']

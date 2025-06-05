@@ -16,7 +16,6 @@ export class EventEntity {
 
     static fromObject(object: {[key: string]: any}) {
         const {id, _id, name, description, location, date, guests, user, games, guest_ids = []} = object;
-
         
         if ( !id && !_id ) throw CustomError.badRequest('Missing id');
         if(!name) throw CustomError.badRequest('Missing game event name');

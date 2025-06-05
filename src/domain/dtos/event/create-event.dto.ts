@@ -1,3 +1,4 @@
+import { Validators } from "../../../config";
 
 
 export class CreateEventDto {
@@ -21,10 +22,17 @@ export class CreateEventDto {
         if(!date) return ['Missing game event date'];
         if(!guests) return ['Missing game event guests'];
         if(!user) return ['Missing game event user'];
-        if(!games) return ['Missing games to play'];
+        if (!Validators.isMongoID(user)) return ['Game event - invalid User ID'];
+        if(!games) return ['Missing game events board games'];
+        const gamesArray: string[] = JSON.parse(games);
+        if(Array.isArray(gamesArray)){
+            gamesArray.forEach((game: string) => {
+                 if (!Validators.isMongoID(game)) return ['Game event - invalid Game ID'];
+            });
+        }
 
-        const event = new CreateEventDto(name, description, location, date, guests, user, games, guest_ids);
-
+        const event = new CreateEventDto(name, description, location, date, guests, user, gamesArray, guest_ids);
+        
         return [undefined, event];
 
     }
